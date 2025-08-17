@@ -95,9 +95,13 @@ inputs = user_inputs()
 st.session_state["default_config"].update(inputs)
 
 # Load candle data to get current price for calculations
+# Extract base trading pair (e.g., "LTC-USDT-SWAP" -> "LTC-USDT")
+trading_pair_parts = inputs["trading_pair"].split("-")
+base_trading_pair = f"{trading_pair_parts[0]}-{trading_pair_parts[1]}" if len(trading_pair_parts) >= 2 else inputs["trading_pair"]
+
 candles = get_candles(
     connector_name=inputs["connector_name"],
-    trading_pair=inputs["trading_pair"],
+    trading_pair=base_trading_pair,
     interval=inputs["interval"],
     days=inputs["days_to_visualize"]
 )
