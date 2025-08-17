@@ -377,8 +377,7 @@ class DynamicGrid(ControllerBase):
         
         要求：
         1. 没有活跃的执行器
-        2. 没有未完成的订单
-        3. 没有持仓
+        2. 没有持仓
         
         Returns:
             bool: 如果可以安全调整网格返回True，否则返回False
@@ -389,19 +388,13 @@ class DynamicGrid(ControllerBase):
             self.logger().info(f"Cannot adjust grid: {len(active_executors)} active executors found")
             return False
         
-        # 检查是否有未完成的订单
-        connector = self.connectors[self.config.connector_name]
-        open_orders = connector.get_open_orders()
-        if open_orders:
-            self.logger().info(f"Cannot adjust grid: {len(open_orders)} open orders found")
-            return False
-        
         # 检查是否有持仓
-        if hasattr(connector, 'get_position'):
-            position = connector.get_position(self.config.trading_pair)
-            if position and abs(position.amount) > Decimal("0"):
-                self.logger().info(f"Cannot adjust grid: Position exists with amount {position.amount}")
-                return False
+        position_held = next((position for position in self.positions_held if
+                              (position.trading_pair == self.config.trading_pair) &
+                              (position.connector_name == self.config.connector_name)), None)
+        if position_held and abs(position_held.amount) > Decimal("0"):
+            self.logger().info(f"Cannot adjust grid: Position exists with amount {position_held.amount}")
+            return False
         
         return True
     
