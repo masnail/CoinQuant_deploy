@@ -439,18 +439,23 @@ class DynamicGrid(ControllerBase):
     
     async def force_cancel_all_orders(self):
         """强制取消所有订单"""
-        connector = self.connectors[self.config.connector_name]
-        open_orders = connector.get_open_orders()
+        # 通过停止所有活跃的执行器来取消订单
+        active_executors = self.active_executors()
         
-        if open_orders:
-            self.logger().info(f"Force canceling {len(open_orders)} open orders")
-            for order in open_orders:
-                try:
-                    connector.cancel(self.config.trading_pair, order.client_order_id)
-                except Exception as e:
-                    self.logger().error(f"Failed to cancel order {order.client_order_id}: {e}")
+        if active_executors:
+            self.logger().info(f"Force stopping {len(active_executors)} active executors")
+            stop_actions = []
+            for executor in active_executors:
+                stop_actions.append(StopExecutorAction(
+                    controller_id=self.config.id,
+                    executor_id=executor.id
+                ))
             
-            # 等待订单取消完成
+            # 执行停止动作
+            if hasattr(self, 'executor_orchestrator') and self.executor_orchestrator:
+                self.executor_orchestrator.execute_actions(stop_actions)
+            
+            # 等待执行器停止完成
             await asyncio.sleep(2)
     
     async def wait_for_position_close(self, max_wait_time: int = 60) -> bool:
@@ -462,21 +467,20 @@ class DynamicGrid(ControllerBase):
         Returns:
             bool: 如果持仓成功平仓返回True
         """
-        connector = self.connectors[self.config.connector_name]
         wait_interval = 2
         waited_time = 0
         
         while waited_time < max_wait_time:
-            if hasattr(connector, 'get_position'):
-                position = connector.get_position(self.config.trading_pair)
-                if not position or abs(position.amount) == Decimal("0"):
-                    self.logger().info("Position successfully closed")
-                    return True
-                
-                self.logger().info(f"Waiting for position to close... Current amount: {position.amount} ({waited_time}s/{max_wait_time}s)")
-            else:
-                # 如果不支持持仓查询，假设没有持仓
+            # 使用控制器的positions_held属性检查持仓
+            position_held = next((position for position in self.positions_held if
+                                  (position.trading_pair == self.config.trading_pair) &
+                                  (position.connector_name == self.config.connector_name)), None)
+            
+            if not position_held or abs(position_held.amount) == Decimal("0"):
+                self.logger().info("Position successfully closed")
                 return True
+            
+            self.logger().info(f"Waiting for position to close... Current amount: {position_held.amount} ({waited_time}s/{max_wait_time}s)")
             
             await asyncio.sleep(wait_interval)
             waited_time += wait_interval
