@@ -127,6 +127,15 @@ def user_inputs():
                 )
             
             with c2:
+                min_spread = st.number_input(
+                    "订单之间的最小价差",
+                    min_value=0.0000,
+                    value=0.0001,
+                    format="%.4f",
+                    help="订单之间的最小价差",
+                    step=0.0001
+                )
+
                 max_orders_per_batch = st.number_input(
                     "每批次最大订单数",
                     min_value=1,
@@ -250,6 +259,7 @@ def user_inputs():
         "max_orders_per_batch": max_orders_per_batch,
         "order_frequency": order_frequency,
         "keep_position": keep_position,
+        "min_spread_between_orders": min_spread,
         "triple_barrier_config": triple_barrier_config,
         "candles_config": []
     }

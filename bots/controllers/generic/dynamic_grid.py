@@ -48,7 +48,7 @@ class DynamicGridConfig(ControllerConfigBase):
 
     # 资金配置
     total_amount_quote: Decimal = Field(default=Decimal("1000"), json_schema_extra={"is_updatable": True})
-
+    min_spread_between_orders: Optional[Decimal] = Field(default=Decimal("0.001"), json_schema_extra={"is_updatable": True})
     min_order_amount_quote: Optional[Decimal] = Field(default=Decimal("5"), json_schema_extra={"is_updatable": True})
 
     # 执行配置
@@ -574,7 +574,7 @@ class DynamicGrid(ControllerBase):
                     leverage=self.config.leverage,
                     side=self.current_side,  # 根据穿越方向确定交易方向
                     total_amount_quote=self.config.total_amount_quote,
-
+                    min_spread_between_orders=self.config.min_spread_between_orders,
                     min_order_amount_quote=self.config.min_order_amount_quote,
                     max_open_orders=self.config.max_open_orders,
                     max_orders_per_batch=self.config.max_orders_per_batch,
