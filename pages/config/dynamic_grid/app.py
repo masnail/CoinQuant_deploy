@@ -188,9 +188,6 @@ def prepare_config_for_save(config):
     """Prepare the configuration for saving by converting to proper format."""
     prepared_config = config.copy()
     
-    # Convert side to value
-    prepared_config["side"] = prepared_config["side"].value
-    
     # Convert triple barrier order types to values
     if "triple_barrier_config" in prepared_config and prepared_config["triple_barrier_config"]:
         for key in ["open_order_type", "stop_loss_order_type", "take_profit_order_type", "time_limit_order_type"]:
