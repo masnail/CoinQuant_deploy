@@ -55,6 +55,7 @@ class DynamicGridConfig(ControllerConfigBase):
     max_open_orders: int = Field(default=3, json_schema_extra={"is_updatable": True})
     max_orders_per_batch: Optional[int] = Field(default=1, json_schema_extra={"is_updatable": True})
     order_frequency: int = Field(default=5, json_schema_extra={"is_updatable": True})
+    activation_bounds: Optional[Decimal] = Field(default=None, json_schema_extra={"is_updatable": True})
 
     keep_position: bool = Field(default=False, json_schema_extra={"is_updatable": True})
 

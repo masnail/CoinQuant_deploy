@@ -125,6 +125,13 @@ def user_inputs():
                     value=3,
                     help="最大同时开放订单数"
                 )
+                activation_bounds = st.number_input(
+                    "价格偏差触发更新",
+                    min_value=0.0,
+                    value=0.01,
+                    format="%.4f",
+                    help="价格偏差触发更新"
+                )
             
             with c2:
                 min_spread = st.number_input(
@@ -261,5 +268,6 @@ def user_inputs():
         "keep_position": keep_position,
         "min_spread_between_orders": min_spread,
         "triple_barrier_config": triple_barrier_config,
+        "activation_bounds": activation_bounds,
         "candles_config": []
     }
