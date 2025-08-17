@@ -112,14 +112,6 @@ def user_inputs():
         with st.expander("订单管理配置", expanded=True):
             c1, c2 = st.columns(2)
             with c1:
-                min_spread_between_orders = st.number_input(
-                    "订单间最小价差",
-                    min_value=0.0001,
-                    value=0.001,
-                    format="%.4f",
-                    help="订单间最小价差"
-                )
-                
                 min_order_amount_quote = st.number_input(
                     "最小订单金额 (USDT)",
                     min_value=1.0,
@@ -228,9 +220,9 @@ def user_inputs():
     
     # Prepare triple barrier config
     triple_barrier_config = {
-        "open_order_type": open_order_type,
-        "take_profit_order_type": take_profit_order_type,
-        "stop_loss_order_type": stop_loss_order_type,
+        "open_order_type": OrderType[open_order_type],
+        "take_profit_order_type": OrderType[take_profit_order_type],
+        "stop_loss_order_type": OrderType[stop_loss_order_type],
         "take_profit": take_profit,
         "stop_loss": stop_loss,
         "time_limit": None,
@@ -253,7 +245,6 @@ def user_inputs():
         "adjustment_interval": adjustment_interval,
         "trend_lookback_periods": trend_lookback_periods,
         "trend_threshold": trend_threshold,
-        "min_spread_between_orders": min_spread_between_orders,
         "min_order_amount_quote": min_order_amount_quote,
         "max_open_orders": max_open_orders,
         "max_orders_per_batch": max_orders_per_batch,
