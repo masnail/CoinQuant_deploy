@@ -32,8 +32,8 @@ def user_inputs():
         with st.expander("基础配置", expanded=True):
             c1, c2 = st.columns(2)
             with c1:
-                connector_name = st.text_input("连接器名称", value="binance_perpetual")
-                trading_pair = st.text_input("交易对", value="WLD-USDT")
+                connector_name = st.text_input("连接器名称", value="okx_perpetual")
+                trading_pair = st.text_input("交易对", value="ETH-USDT-SWAP")
                 leverage = st.number_input("杠杆", min_value=1, value=10)
             with c2:
                 position_mode = st.selectbox(
