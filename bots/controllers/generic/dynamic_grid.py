@@ -56,6 +56,7 @@ class DynamicGridConfig(ControllerConfigBase):
     max_orders_per_batch: Optional[int] = Field(default=1, json_schema_extra={"is_updatable": True})
     order_frequency: int = Field(default=5, json_schema_extra={"is_updatable": True})
     activation_bounds: Optional[Decimal] = Field(default=None, json_schema_extra={"is_updatable": True})
+    limit_price_spread: Decimal = Field(default=Decimal("0.01"), json_schema_extra={"is_updatable": True})  # Spread for limit price calculation
 
     keep_position: bool = Field(default=False, json_schema_extra={"is_updatable": True})
 
@@ -554,11 +555,15 @@ class DynamicGrid(ControllerBase):
                 # 价格上穿，创建上方网格，开多
                 grid_start = self.current_end_price
                 grid_end = grid_start * (1 + self.config.grid_width_percentage)
+                # For LONG positions, limit price should be lower than start price
+                limit_price = grid_start * (1 - self.config.limit_price_spread)
                 self.logger().info(f"Price crossed UP, creating LONG grid: [{self.format_price(grid_start)}, {self.format_price(grid_end)}]")
             else:  # self.price_crossed_down
                 # 价格下穿，创建下方网格，开空
                 grid_end = self.current_start_price
                 grid_start = grid_end * (1 - self.config.grid_width_percentage)
+                # For SHORT positions, limit price should be higher than end price
+                limit_price = grid_end * (1 + self.config.limit_price_spread)
                 self.logger().info(f"Price crossed DOWN, creating SHORT grid: [{self.format_price(grid_start)}, {self.format_price(grid_end)}]")
             
             return [CreateExecutorAction(
@@ -569,6 +574,7 @@ class DynamicGrid(ControllerBase):
                     trading_pair=self.config.trading_pair,
                     start_price=self.format_price(grid_start),
                     end_price=self.format_price(grid_end),
+                    limit_price=self.format_price(limit_price),
                     leverage=self.config.leverage,
                     side=self.current_side,  # 根据穿越方向确定交易方向
                     total_amount_quote=self.config.total_amount_quote,
