@@ -194,7 +194,7 @@ def prepare_config_for_save(config):
     
     # Convert triple barrier order types to values
     if "triple_barrier_config" in prepared_config and prepared_config["triple_barrier_config"]:
-        for key in ["open_order_type", "stop_loss_order_type", "take_profit_order_type", "time_limit_order_type"]:
+        for key in ["open_order_type", "stop_loss_order_type", "take_profit_order_type"]:
             if key in prepared_config["triple_barrier_config"] and prepared_config["triple_barrier_config"][key] is not None:
                 prepared_config["triple_barrier_config"][key] = prepared_config["triple_barrier_config"][key].value
     

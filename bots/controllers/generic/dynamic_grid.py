@@ -66,7 +66,7 @@ class DynamicGridConfig(ControllerConfigBase):
         stop_loss=Decimal("0.01"),
         open_order_type=OrderType.LIMIT_MAKER,
         take_profit_order_type=OrderType.LIMIT_MAKER,
-        stop_loss_order_type=OrderType.MARKET,
+        stop_loss_order_type=OrderType.MARKET
     )
 
     def update_markets(self, markets: MarketDict) -> MarketDict:
