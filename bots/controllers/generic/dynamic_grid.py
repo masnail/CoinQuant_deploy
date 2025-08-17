@@ -475,7 +475,7 @@ class DynamicGrid(ControllerBase):
         while waited_time < max_wait_time:
             # 使用控制器的positions_held属性检查持仓
             position_held = next((position for position in self.positions_held if
-                                  (position.trading_pair == self.config.trading_pair) &
+                                  (position.trading_pair == self.config.trading_pair) and
                                   (position.connector_name == self.config.connector_name)), None)
             
             if not position_held or abs(position_held.amount) == Decimal("0"):
