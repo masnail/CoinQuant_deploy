@@ -368,8 +368,8 @@ class DynamicGrid(ControllerBase):
         active_executors = self.active_executors()
         if active_executors:
             executor = active_executors[0]
-            if hasattr(executor.executor_config, 'side'):
-                if executor.executor_config.side != self.current_side:
+            if hasattr(executor, 'side'):
+                if executor.side != self.current_side:
                     return True
                     
         return False
