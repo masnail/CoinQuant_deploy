@@ -52,38 +52,6 @@ def get_dynamic_grid_trace(current_price, grid_width_percentage):
     
     return traces
 
-
-def get_trend_indicators(candles, trend_lookback_periods, trend_threshold):
-    """Calculate trend indicators based on price movement."""
-    if len(candles) < trend_lookback_periods:
-        return None, "insufficient_data"
-    
-    # Get recent prices for trend calculation
-    recent_prices = candles['close'].tail(trend_lookback_periods)
-    first_price = recent_prices.iloc[0]
-    last_price = recent_prices.iloc[-1]
-    
-    price_change_pct = (last_price - first_price) / first_price
-    
-    if price_change_pct > trend_threshold:
-        trend_direction = "up"
-        trend_color = "rgba(0, 255, 0, 0.3)"
-    elif price_change_pct < -trend_threshold:
-        trend_direction = "down"
-        trend_color = "rgba(255, 0, 0, 0.3)"
-    else:
-        trend_direction = "neutral"
-        trend_color = "rgba(128, 128, 128, 0.3)"
-    
-    return {
-        "direction": trend_direction,
-        "change_pct": price_change_pct,
-        "color": trend_color,
-        "first_price": first_price,
-        "last_price": last_price
-    }, trend_direction
-
-
 # Initialize the Streamlit page
 initialize_st_page(title="动态网格策略配置", icon="🔄", initial_sidebar_state="expanded")
 backend_api_client = get_backend_api_client()
@@ -106,66 +74,6 @@ candles = get_candles(
     days=inputs["days_to_visualize"]
 )
 
-# Get current price
-current_price = None
-if not candles.empty:
-    current_price = candles['close'].iloc[-1]
-
-# Get trend analysis for strategy information display
-trend_info, trend_direction = get_trend_indicators(
-    candles,
-    inputs["trend_lookback_periods"],
-    inputs["trend_threshold"]
-) if not candles.empty else (None, "neutral")
-
-# Display strategy information
-st.markdown("---")
-st.markdown("### 策略信息")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.metric(
-        label="当前价格",
-        value=f"{float(current_price):,.2f}" if current_price else "N/A",
-        delta=None
-    )
-    
-    if current_price:
-        grid_width = float(current_price) * float(inputs["grid_width_percentage"])
-        st.metric(
-            label="网格宽度",
-            value=f"{grid_width:,.2f}",
-            delta=f"{inputs['grid_width_percentage']:.1%}"
-        )
-
-with col2:
-    if trend_info:
-        st.metric(
-            label="趋势方向",
-            value=trend_direction.upper(),
-            delta=f"{trend_info['change_pct']:.2%}"
-        )
-        
-        st.metric(
-            label="趋势强度",
-            value="强" if abs(trend_info['change_pct']) > inputs['trend_threshold'] * 2 else "弱",
-            delta=None
-        )
-
-with col3:
-    st.metric(
-        label="峰值检测周期",
-        value=f"{inputs['peak_detection_period']}s",
-        delta=None
-    )
-
-    st.metric(
-        label="自动更新",
-        value="启用",
-        delta=f"{inputs['adjustment_interval']}s"
-    )
-
 # Strategy description
 st.markdown("### 策略说明")
 st.markdown("""
@@ -175,7 +83,7 @@ st.markdown("""
 
 2. **峰值检测**: 自动识别价格的峰值和谷值
 
-3. **动态边界调整**: 根据峰值动态调整网格上下边界
+3. **动态边界调整**: 动态调整网格上下边界
 
 4. **趋势判断**: 
    - 价格上穿网格上边界时开多（做多）
@@ -184,7 +92,6 @@ st.markdown("""
 
 5. **智能网格重启**: 在价格突破边界或趋势发生重大变化时重启网格
 
-6. **可配置的自动更新机制**: 支持定时更新和趋势变化触发更新
 """)
 
 # Configuration save section

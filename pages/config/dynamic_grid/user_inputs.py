@@ -52,59 +52,39 @@ def user_inputs():
         with st.expander("动态网格配置", expanded=True):
             c1, c2 = st.columns(2)
             with c1:
-                grid_width_percentage = st.number_input(
-                    "网格宽度百分比",
+                avg_grid_width_percentage = st.number_input(
+                    "单个网格宽度百分比",
                     min_value=0.01,
                     max_value=1.0,
                     value=0.03,
                     format="%.3f",
-                    help="网格宽度百分比"
-                )
-                
-                price_change_threshold = st.number_input(
-                    "价格变化阈值",
-                    min_value=0.001,
-                    max_value=0.5,
-                    value=0.02,
-                    format="%.3f",
-                    help="价格变化阈值"
-                )
-            
-            with c2:
-                peak_detection_period = st.number_input(
-                    "峰值检测周期(秒)",
-                    min_value=60,
-                    value=300,
-                    help="峰值检测周期(秒)"
-                )
-                
-                adjustment_interval = st.number_input(
-                    "调整间隔(秒)",
-                    min_value=60,
-                    value=86400,
-                    help="边界调整间隔(秒)"
+                    help="单个网格宽度百分比"
                 )
 
-        # Trend Detection Configuration
-        with st.expander("趋势判断配置", expanded=True):
-            c1, c2 = st.columns(2)
-            with c1:
-                trend_lookback_periods = st.number_input(
-                    "趋势回看周期数",
-                    min_value=3,
-                    max_value=20,
-                    value=5,
-                    help="趋势回看周期数"
+                all_grid_width_percentage = st.number_input(
+                    "整个网格宽度百分比",
+                    min_value=0.2,
+                    max_value=1.0,
+                    value=0.5,
+                    format="%.3f",
+                    help="整个网格宽度百分比"
                 )
+                
             
             with c2:
-                trend_threshold = st.number_input(
-                    "趋势判断阈值",
-                    min_value=0.001,
-                    max_value=0.1,
-                    value=0.01,
+                exceed_bound_percentage = st.number_input(
+                    "超出上下边界百分比",
+                    min_value=0.1,
+                    max_value=1,
+                    value=0.2,
                     format="%.3f",
-                    help="趋势判断阈值"
+                    help="超出上下边界百分比"
+                )
+                adjustment_interval = st.number_input(
+                    "调整间隔(秒)",
+                    min_value=300,
+                    value=86400,
+                    help="边界调整间隔(秒)"
                 )
     
     with right_col:
@@ -196,7 +176,7 @@ def user_inputs():
                 take_profit = st.number_input(
                     "止盈比例",
                     min_value=0.0,
-                    value=grid_width_percentage,
+                    value=avg_grid_width_percentage,
                     format="%.4f",
                     help="止盈比例"
                 )
@@ -204,7 +184,7 @@ def user_inputs():
                 stop_loss = st.number_input(
                     "止损比例",
                     min_value=0.0,
-                    value=grid_width_percentage*3,
+                    value=avg_grid_width_percentage*3,
                     format="%.4f",
                     help="止损比例"
                 )
@@ -255,12 +235,10 @@ def user_inputs():
         "leverage": leverage,
         "position_mode": position_mode,
         "total_amount_quote": total_amount_quote,
-        "grid_width_percentage": grid_width_percentage,
-        "peak_detection_period": peak_detection_period,
-        "price_change_threshold": price_change_threshold,
+        "avg_grid_width_percentage": avg_grid_width_percentage,
+        "all_grid_width_percentage": all_grid_width_percentage,
+        "exceed_bound_percentage": exceed_bound_percentage,
         "adjustment_interval": adjustment_interval,
-        "trend_lookback_periods": trend_lookback_periods,
-        "trend_threshold": trend_threshold,
         "min_order_amount_quote": min_order_amount_quote,
         "max_open_orders": max_open_orders,
         "max_orders_per_batch": max_orders_per_batch,

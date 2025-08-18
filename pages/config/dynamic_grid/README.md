@@ -45,26 +45,11 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `initial_grid_width_percentage` | float | 0.1 | 初始网格宽度百分比 |
-| `grid_width_percentage` | float | 0.1 | 网格宽度百分比 |
-| `peak_detection_period` | int | 300 | 峰值检测周期(秒) |
-| `price_change_threshold` | float | 0.02 | 价格变化阈值 |
-| `adjustment_interval` | int | 600 | 调整间隔(秒) |
+| `avg_grid_width_percentage` | float | 0.1 | 单个网格宽度百分比 |
+| `all_grid_width_percentage` | float | 0.1 | 整体网格宽度百分比 |
+| `initial_grid_width_percentage` | float | 0.1 | 超出上下边界百分比 |
+| `exceed_bound_percentage` | int | 600 | 调整间隔(秒) |
 
-### 自动更新配置
-
-| 参数 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `auto_update_enabled` | bool | true | 启用自动更新 |
-| `auto_update_interval` | int | 300 | 自动更新间隔(秒) |
-| `force_update_on_trend_change` | bool | true | 趋势变化时强制更新 |
-
-### 趋势判断配置
-
-| 参数 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `trend_lookback_periods` | int | 5 | 趋势回看周期数 |
-| `trend_threshold` | float | 0.01 | 趋势判断阈值 |
 
 ### 订单管理配置
 
