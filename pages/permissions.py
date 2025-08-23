@@ -17,6 +17,7 @@ def public_pages():
             st.Page("frontend/pages/config/supertrend_v1/app.py", title="SuperTrend V1", icon="👨‍🔬", url_path="supertrend_v1"),
             st.Page("frontend/pages/config/xemm_controller/app.py", title="XEMM Controller", icon="⚡️", url_path="xemm_controller"),
             st.Page("frontend/pages/config/dynamic_grid/app.py", title="动态网格策略", icon="🎳", url_path="dynamic_grid"),
+            st.Page("frontend/pages/config/trend_following_v1/app.py", title="趋势跟随策略 V1", icon="📈", url_path="trend_following_v1"),
         ],
         "Data": [
             st.Page("frontend/pages/data/download_candles/app.py", title="Download Candles", icon="💹", url_path="download_candles"),

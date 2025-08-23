@@ -75,7 +75,7 @@ def user_inputs():
                 exceed_bound_percentage = st.number_input(
                     "超出上下边界百分比",
                     min_value=0.1,
-                    max_value=1,
+                    max_value=1.0,
                     value=0.2,
                     format="%.3f",
                     help="超出上下边界百分比"
@@ -188,31 +188,6 @@ def user_inputs():
                     format="%.4f",
                     help="止损比例"
                 )
-        
-    # Chart Configuration
-    with st.expander("图表配置", expanded=True):
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            candles_connector = st.text_input(
-                "K线连接器",
-                value=connector_name,  # Use same connector as trading by default
-                help="获取价格数据的连接器"
-            )
-        with c2:
-            interval = st.selectbox(
-                "时间间隔",
-                options=["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "12h", "1d"],
-                index=5,  # Default to 1h
-                help="K线时间间隔"
-            )
-        with c3:
-            days_to_visualize = st.number_input(
-                "显示天数",
-                min_value=1,
-                max_value=365,
-                value=30,
-                help="显示的历史数据天数"
-            )
     
     # Prepare triple barrier config
     triple_barrier_config = {
@@ -225,13 +200,11 @@ def user_inputs():
     }
     
     return {
+        "id": "DynamicGrid",
         "controller_name": "dynamic_grid",
         "controller_type": "generic",
         "connector_name": connector_name,
-        "candles_connector": candles_connector,
         "trading_pair": trading_pair,
-        "interval": interval,
-        "days_to_visualize": days_to_visualize,
         "leverage": leverage,
         "position_mode": position_mode,
         "total_amount_quote": total_amount_quote,
