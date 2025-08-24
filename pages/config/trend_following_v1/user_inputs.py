@@ -1,5 +1,6 @@
 import streamlit as st
 
+from hummingbot.connector.connector_base import OrderType
 from frontend.components.directional_trading_general_inputs import get_directional_trading_general_inputs
 from frontend.components.risk_management import get_risk_management_inputs
 
@@ -9,7 +10,23 @@ def user_inputs():
     
     # connector_name, trading_pair, leverage, total_amount_quote, max_executors_per_side, cooldown_time, position_mode, \
     #     candles_connector_name, candles_trading_pair, interval = get_directional_trading_general_inputs()
-    sl, tp, time_limit, ts_ap, ts_delta, take_profit_order_type = get_risk_management_inputs()
+    # sl, tp, time_limit, ts_ap, ts_delta, take_profit_order_type = get_risk_management_inputs()
+    
+    with st.expander("Risk Management", expanded=True):
+        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        with c1:
+            sl = st.number_input("Stop Loss (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
+        with c2:
+            tp = st.number_input("Take Profit (%)", min_value=0.0, max_value=100.0, value=3.0, step=0.1)
+        with c3:
+            take_profit_order_type = st.selectbox("Take Profit Order Type", options=[OrderType.LIMIT, OrderType.MARKET],
+                    index=1)
+        with c4:
+            ts_ap = st.number_input("Trailing Stop Act. Price (%)", min_value=0.0, max_value=100.0, value=1.8, step=0.1)
+        with c5:
+            ts_delta = st.number_input("Trailing Stop Delta (%)", min_value=0.0, max_value=100.0, value=0.2, step=0.1)
+        with c6:
+            time_limit = st.number_input("Time Limit (minutes)", min_value=0, value=60)
     
     with st.expander("General Settings", expanded=True):
         c1,c2,c3,c4,c5,c6,c7,c8 = st.columns(8)
@@ -54,27 +71,27 @@ def user_inputs():
     with st.expander("RSI Configuration", expanded=True):
         c1, c2, c3 = st.columns(3)
         with c1:
-            rsi_period = st.number_input("RSI Period", min_value=1, max_value=200, value=14)
+            rsi_period = st.number_input("RSI Period", min_value=1, max_value=100, value=14)
         with c2:
-            rsi_upper = st.number_input("RSI Upper", min_value=1, max_value=200, value=70)
+            rsi_upper = st.number_input("RSI Upper", min_value=1, max_value=100, value=65)
         with c3:
-            rsi_lower = st.number_input("RSI Lower", min_value=1, max_value=200, value=30)
+            rsi_lower = st.number_input("RSI Lower", min_value=1, max_value=100, value=35)
             
     with st.expander("EMA Configuration", expanded=True):
         c1, c2, c3 = st.columns(3)
         with c1:
-            ema1 = st.number_input("EMA1", min_value=1, max_value=200, value=3)
+            ema1 = st.number_input("EMA1", min_value=1, max_value=100, value=3)
         with c2:
-            ema2 = st.number_input("EMA2", min_value=1, max_value=200, value=5)
+            ema2 = st.number_input("EMA2", min_value=1, max_value=100, value=5)
         with c3:
-            ema3 = st.number_input("EMA3", min_value=1, max_value=200, value=7)
+            ema3 = st.number_input("EMA3", min_value=1, max_value=100, value=7)
             
     with st.expander("ADX Configuration", expanded=True):
         c1, c2 = st.columns(2)
         with c1:
-            adx_period = st.number_input("ADX Period", min_value=1, max_value=200, value=14)
+            adx_period = st.number_input("ADX Period", min_value=1, max_value=100, value=14)
         with c2:
-            adx_threshold = st.number_input("ADX Threshold", min_value=1, max_value=200, value=70)
+            adx_threshold = st.number_input("ADX Threshold", min_value=1, max_value=100, value=35)
     
     return {
         "controller_name": "trend_following_v1",
@@ -89,6 +106,7 @@ def user_inputs():
         "candles_connector": candles_connector_name,
         "candles_trading_pair": candles_trading_pair,
         "interval": interval,
+        
         "stop_loss": sl,
         "take_profit": tp,
         "time_limit": time_limit,
@@ -97,6 +115,7 @@ def user_inputs():
             "trailing_delta": ts_delta
         },
         "take_profit_order_type": take_profit_order_type.value,
+        
         
         # 自定义参数赋值
         "ma1": ma1,

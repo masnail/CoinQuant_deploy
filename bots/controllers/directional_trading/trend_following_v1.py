@@ -128,7 +128,6 @@ class TrendFollowingController(DirectionalTradingControllerBase):
         # MACD
         df.ta.macd(fast=self.config.macd_fast, slow=self.config.macd_slow, signal=self.config.macd_signal, append=True)
 
-        macdh = df[f"MACDh_{self.config.macd_fast}_{self.config.macd_slow}_{self.config.macd_signal}"]
         macd = df[f"MACD_{self.config.macd_fast}_{self.config.macd_slow}_{self.config.macd_signal}"]
 
         # RSI
@@ -148,8 +147,8 @@ class TrendFollowingController(DirectionalTradingControllerBase):
         adx = df[f"ADX_{self.config.adx_period}"]
 
         # Generate signal
-        long_condition = ((ma1 > ma2) & (ma2 > ma3)) & (macdh > 0) & (macd < 0) & (rsi < self.config.rsi_lower) & (adx > self.config.adx_threshold) & ((ema1 > ema2) & (ema2 > ema3))
-        short_condition = ((ma3 > ma2) & (ma2 > ma1)) & (macdh < 0) & (macd > 0) & (rsi > self.config.rsi_upper) & (adx > self.config.adx_threshold) & ((ema3 > ema2) & (ema2 > ema1))
+        long_condition = ((ma1 > ma2) & (ma2 > ma3)) & (macd > 0.001) & (rsi < self.config.rsi_lower) & (adx > self.config.adx_threshold) & ((ema1 > ema2) & (ema2 > ema3))
+        short_condition = ((ma3 > ma2) & (ma2 > ma1)) & (macd < -0.001) & (rsi > self.config.rsi_upper) & (adx > self.config.adx_threshold) & ((ema3 > ema2) & (ema2 > ema1))
 
         df["signal"] = 0
         df.loc[long_condition, "signal"] = 1
