@@ -200,7 +200,7 @@ def user_inputs():
     }
     
     return {
-        "id": "DynamicGrid",
+        "id": "dynamic-grid",
         "controller_name": "dynamic_grid",
         "controller_type": "generic",
         "connector_name": connector_name,

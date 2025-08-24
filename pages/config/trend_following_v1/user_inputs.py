@@ -94,6 +94,7 @@ def user_inputs():
             adx_threshold = st.number_input("ADX Threshold", min_value=1, max_value=100, value=35)
     
     return {
+        "id": "trend-following",
         "controller_name": "trend_following_v1",
         "controller_type": "directional_trading",
         "connector_name": connector_name,
