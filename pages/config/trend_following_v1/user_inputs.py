@@ -45,7 +45,7 @@ def user_inputs():
         with c7:
             position_mode = st.selectbox("Position Mode", ["HEDGE", "ONEWAY"], index = 0)
         with c8:
-            interval = st.selectbox("Interval", ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"], index = 1)
+            interval = st.selectbox("Interval", ["1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"], index = 2)
             
     candles_connector_name = connector_name
     candles_trading_pair = trading_pair
@@ -71,11 +71,11 @@ def user_inputs():
     with st.expander("RSI Configuration", expanded=True):
         c1, c2, c3 = st.columns(3)
         with c1:
-            rsi_period = st.number_input("RSI Period", min_value=1, max_value=100, value=14)
+            rsi_period = st.number_input("RSI Period", min_value=1, max_value=100, value=6)
         with c2:
-            rsi_upper = st.number_input("RSI Upper", min_value=1, max_value=100, value=65)
+            rsi_upper = st.number_input("RSI Upper", min_value=1, max_value=100, value=50)
         with c3:
-            rsi_lower = st.number_input("RSI Lower", min_value=1, max_value=100, value=35)
+            rsi_lower = st.number_input("RSI Lower", min_value=1, max_value=100, value=20)
             
     with st.expander("EMA Configuration", expanded=True):
         c1, c2, c3 = st.columns(3)
@@ -91,10 +91,10 @@ def user_inputs():
         with c1:
             adx_period = st.number_input("ADX Period", min_value=1, max_value=100, value=14)
         with c2:
-            adx_threshold = st.number_input("ADX Threshold", min_value=1, max_value=100, value=35)
+            adx_threshold = st.number_input("ADX Threshold", min_value=1, max_value=100, value=30)
     
     return {
-        "id": "trend-following",
+        "id": f"trend-following-{trading_pair}-{connector_name}",
         "controller_name": "trend_following_v1",
         "controller_type": "directional_trading",
         "connector_name": connector_name,
